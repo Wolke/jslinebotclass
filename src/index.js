@@ -2,6 +2,7 @@
 const line = require("@line/bot-sdk");
 const express = require("express");
 const config = require("./const");
+const handle = require("./main");
 // create LINE SDK config from env variables
 
 // create LINE SDK client
@@ -9,7 +10,9 @@ const client = new line.Client(config);
 // create Express app
 // about Express itself: https://expressjs.com/
 const app = express();
-app.get("/", (req, rep) => rep.end("hello! !"));
+app.get("/", (req, rep) => {
+  rep.end("hello! !");
+});
 
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
@@ -30,7 +33,7 @@ function handleEvent(event) {
   }
 
   // create a echoing text message
-  const echo = { type: "text", text: event.message.text };
+  const echo = { type: "text", text: handle(event.message.text) };
 
   // use reply API
   return client.replyMessage(event.replyToken, echo);
