@@ -1,9 +1,17 @@
-const exc = 30;
+const EXCHANGE_RATE = 30;
+
+let no = 20;
 
 function handle(text) {
   // let dollar = 0;
   // dollar = text;
   // string
+
+  let lastName = `peter`;
+  let age = 30;
+
+  let S = 1;
+
   let s = `abc`;
   s = 2;
 
