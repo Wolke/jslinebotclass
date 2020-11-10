@@ -7,7 +7,6 @@ const config = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
   channelSecret: process.env.CHANNEL_SECRET
 };
-
 // create LINE SDK client
 const client = new line.Client(config);
 // create Express app
