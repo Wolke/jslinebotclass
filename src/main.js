@@ -16,14 +16,18 @@ function handle(text) {
   s = 2;
 
   //number
-  let n = 1;
+  let n = text;
+  n++; // n = n+1
   // n = "wwww";
   //bolean
   //true
   //false
-  let beok = text;
+  let beok = true;
 
-  return n + 100;
+  let ary = [1, 2, 3, `abc`, true];
+  ary[0] = [123, 456];
+
+  return n;
 }
 
 module.exports = handle;
