@@ -1,47 +1,5 @@
 const EXCHANGE_RATE = 30;
 
-//string
-`hello`;
-("hi");
-("soga");
-//number
-1;
-2;
-1.2;
-//boolean
-true;
-false;
-
-//undefind
-var a;
-
-//null
-var b = null;
-
-//object
-var o = new Object();
-o = {};
-
-//array
-var ary = new Array();
-
-//function
-var f = () => {};
-
-// console.log(typeof a);
-
-// var agent = {
-//   name: "Amy",
-//   age: 28,
-//   countExchange: (...money) => EXCHANGE_RATE * money
-// };
-
-// function Agent(name, age) {
-//   this.name = name;
-//   this.age = age;
-//   this.countExchange = (...money) => EXCHANGE_RATE * money;
-// }
-
 class Agent {
   constructor(name, age) {
     this.name = name;
@@ -55,7 +13,11 @@ class Agent {
 class Major extends Agent {
   drinkPot() {
     console.log(`泡茶中`);
-    return this.name + `泡茶中`;
+    let n = this.name + "王";
+    // n.replace("王", "林");
+    // console.log(n.split("r"));
+
+    return `${n} 泡茶中`;
   }
 }
 
