@@ -1,19 +1,14 @@
-function handle(text) {
-  let r = `白天好!`;
-  let d = new Date();
-
-  let s = d.toLocaleString(`zh-TW`, { timeZone: `Asia/Taipei`, hour12: false });
-  console.log(s);
-  let t = s.slice(11, 13);
-
-  if (t > 5 && t < 11) {
-    r = `早安!`;
-  } else if (t >= 11 && t <= 16) {
-    r = `午安!`;
-  } else {
-    r = `晚安!`;
+var ary = [`amy`, `peter`, `john`];
+let r = ary.filter((v, i, a) => {
+  // console.log(v, i, a);
+  if (v.indexOf(`a`) === -1) {
+    return v;
   }
-  return r;
+});
+console.log(r);
+
+function handle(text) {
+  return text;
 }
 
 module.exports = handle;
