@@ -1,70 +1,83 @@
-// string trigger
-// 景點
-// 好店
-// 住宿
-class Spot {
-  constructor(name, address) {
-    this.name = name;
-    this.address = address;
-  }
-  getAdress() {
-    return this.address;
-  }
-  getDesc() {
-    return `名稱：${this.name} 地址： ${this.address}`;
-  }
-}
+const dialogflow = require("dialogflow");
+const uuid = require("uuid");
+const fetch = require("node-fetch");
+let private_key = process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n");
 
-class Store extends Spot {
-  constructor(name, address, product) {
-    super(name, address);
-    if (product === undefined) {
-      throw Error(`no product`);
+// console.log(private_key);
+// return;
+const sessionClient = new dialogflow.SessionsClient({
+  credentials: {
+    client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+    private_key: private_key
+  }
+});
+const sessionPath = sessionClient.sessionPath("demo123-odsk", uuid.v4());
+
+//weather api
+var getWeather = async (locationName) => {
+  return await fetch(
+    `https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-5A8C36DD-0F86-4F52-9C86-8C19AA5674E6&format=JSON&locationName=${locationName}&elementName=`
+  ).then((res) => res.json());
+  // .then((json) => console.log(json));
+  // return json;
+};
+// (async () => {
+//   let r = await getWeather(encodeURI("新北市"));
+//   console.log(r);
+// })();
+//dialogflow
+//台北市的天氣如何,
+//新北市的今天幾度
+
+//gcp function
+
+async function handle(text) {
+  const sessionId = uuid.v4();
+
+  // Create a new session
+  // let s = process.env.GOOGLE_PRIVATE_KEY;
+
+  // The text query request.
+  const request = {
+    session: sessionPath,
+    queryInput: {
+      text: {
+        // The query to send to the dialogflow agent
+        text: text, // 改成喂
+        // The language used by the client (en-US)
+        languageCode: "zh-TW" // 改成 zh-TW
+      }
     }
-    this.product = product;
+  };
+  const responses = await sessionClient.detectIntent(request);
+  console.log("Detected intent");
+  //intent
+  // weather = >
+  console.log("Detected intent");
+  console.log(responses[0].queryResult.parameters);
+  const result = responses[0].queryResult;
+  console.log(`  Query: ${result.queryText}`);
+  console.log(`  Response: ${result.fulfillmentText}`);
+  if (result.intent) {
+    console.log(`  Intent: ${result.intent.displayName}`);
+  } else {
+    console.log(`  No intent matched.`);
   }
-  getProdcut() {
-    return `商品：${this.product}`;
+
+  let t = `不清楚`;
+  if (result.intent.displayName === "Default Fallback Intent") {
+    return t;
   }
-}
+  let { location } = responses[0].queryResult.parameters.fields;
 
-class Hotel extends Spot {
-  constructor(name, address, price) {
-    super(name, address);
-    this.price = price;
+  try {
+    let r = await getWeather(encodeURI(location.stringValue));
+    t = r.records.location[0].weatherElement[0].time[0].parameter.parameterName;
+    console.log(t);
+  } catch (e) {
+    console.log(e);
   }
-}
-
-let park = new Spot(`大家公園`, `路邊`);
-let cafe = new Store(`馬利歐莎`, `咖啡路`, `咖啡`);
-let hotel = new Hotel(`厚德`, `厚德街`);
-function handle(text) {
-  let r;
-  let s;
-  switch (text) {
-    case `景點`:
-      s = `景點 ${park.getDesc()}`;
-      r = [
-        { type: "sticker", stickerId: "1", packageId: "1" },
-        { type: "text", text: s }
-      ];
-      break;
-    case `好店`:
-      s = `好店 ${cafe.getDesc()} ${cafe.getProdcut()}`;
-      r = { type: "text", text: s };
-      break;
-
-    case `住宿`:
-      s = `住宿 ${hotel.getDesc()}`;
-      r = { type: "text", text: s };
-      break;
-    default:
-      s = `重新輸入一次`;
-      r = { type: "text", text: s };
-  }
-  console.log(r);
-
-  return r;
+  return `${location.stringValue}的天氣是 ${t}`;
 }
 
 module.exports = handle;

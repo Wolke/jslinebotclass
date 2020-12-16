@@ -25,8 +25,22 @@ app.post("/callback", line.middleware(config), (req, res) => {
     });
 });
 
+exports.handler = async (req, res) =>
+  line.middleware(config)(req, res, () => {
+    console.log("req.body", JSON.stringify(req.body));
+    Promise.all(req.body.events.map(handleEvent))
+      .then((result) => {
+        console.log(result);
+        return res.json(result);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).end();
+      });
+  });
+
 // event handler
-function handleEvent(event) {
+async function handleEvent(event) {
   // console.log(event);
 
   if (event.type !== "message" || event.message.type !== "text") {
@@ -35,8 +49,8 @@ function handleEvent(event) {
   }
 
   // create a echoing text message
-  // const echo = { type: "text", text: handle(event.message.text) };
-  const echo = handle(event.message.text);
+  const echo = { type: "text", text: await handle(event.message.text) };
+  // const echo = handle(event.message.text);
   console.log(echo);
   // use reply API
   return client.replyMessage(event.replyToken, echo);
