@@ -25,19 +25,19 @@ app.post("/callback", line.middleware(config), (req, res) => {
     });
 });
 
-exports.handler = async (req, res) =>
-  line.middleware(config)(req, res, () => {
-    console.log("req.body", JSON.stringify(req.body));
-    Promise.all(req.body.events.map(handleEvent))
-      .then((result) => {
-        console.log(result);
-        return res.json(result);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).end();
-      });
-  });
+// exports.handler = async (req, res) =>
+//   line.middleware(config)(req, res, () => {
+//     console.log("req.body", JSON.stringify(req.body));
+//     Promise.all(req.body.events.map(handleEvent))
+//       .then((result) => {
+//         console.log(result);
+//         return res.json(result);
+//       })
+//       .catch((err) => {
+//         console.error(err);
+//         res.status(500).end();
+//       });
+//   });
 
 // event handler
 async function handleEvent(event) {
