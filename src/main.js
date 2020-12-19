@@ -6,10 +6,8 @@ flow
 好宿 => [...]
 ...
 */
-let stores = require("./store")();
-let contents = stores.map((s) => s.getResponse());
-console.log(contents);
-function handle(text) {
+let getStore = require("./store");
+async function handle(text) {
   // let r = text;
   switch (text) {
     case "好物":
@@ -20,16 +18,16 @@ function handle(text) {
       break;
     case "好宿":
       // r = "好宿..";
-
+      let stores = await getStore("好宿");
       return {
         type: "flex",
         altText: "this is a flex message",
         contents: {
           type: "carousel",
-          contents: contents
+          contents: stores.map((s) => s.getResponse())
         }
       };
-      // return stores.getResponse();
+
       break;
     case "交通":
       // r = "交通..";

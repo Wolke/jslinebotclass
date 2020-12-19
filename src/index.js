@@ -11,7 +11,7 @@ const client = new line.Client(config);
 // about Express itself: https://expressjs.com/
 const app = express();
 app.get("/", (req, rep) => {
-  rep.end("hello! !");
+  rep.end("hello!!");
 });
 
 // register a webhook handler with middleware
@@ -50,7 +50,7 @@ async function handleEvent(event) {
 
   // create a echoing text message
   // const echo = { type: "text", text: await handle(event.message.text) };
-  const echo = handle(event.message.text);
+  const echo = await handle(event.message.text);
   // console.log(echo);
 
   // use reply API
