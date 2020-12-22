@@ -5,11 +5,14 @@ const getStore = async (p) => {
   const doc = new GoogleSpreadsheet(
     "1KU0PsZ2udpWjwGy1aw8uajHzM1IGMHidcf26O88hJWA"
   );
+
   doc.useServiceAccountAuth({
     client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
     private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n")
   });
+
   await doc.loadInfo();
+
   // console.log(doc.title);
   let sheet = doc.sheetsByIndex[0];
   await sheet.loadCells("A1:E10");
@@ -201,32 +204,13 @@ class Store {
     };
   }
 }
-
+class VIP extends Store {
+  getResponse() {
+    return {};
+  }
+}
 module.exports = async (p) => {
   let ary = [];
-  switch (p) {
-    case "好宿":
-      ary = [
-        new Store("好咖啡民宿", "04-1111111"),
-        new Store("好民宿", "04-222222"),
-        new Store("好旅館", "04-333333")
-      ];
-      // console.log(1, ary);
-      ary = await getStore("好宿");
-      return ary;
-      console.log(2, ary);
-
-      break;
-
-    case "好店":
-      ary = [
-        new Store("好咖啡民宿", "04-1111111"),
-        new Store("好牛肉麵", "04-444444"),
-        new Store("好水餃", "04-555555")
-      ];
-      break;
-    default:
-      break;
-  }
-  // return ary;
+  ary = await getStore(p);
+  return ary;
 };

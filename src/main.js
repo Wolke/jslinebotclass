@@ -11,14 +11,10 @@ async function handle(text) {
   // let r = text;
   switch (text) {
     case "好物":
-      // r = "好物...";
-      break;
     case "好店":
-      // r = "好店...";
-      break;
     case "好宿":
       // r = "好宿..";
-      let stores = await getStore("好宿");
+      let stores = await getStore(text);
       return {
         type: "flex",
         altText: "this is a flex message",
@@ -27,7 +23,6 @@ async function handle(text) {
           contents: stores.map((s) => s.getResponse())
         }
       };
-
       break;
     case "交通":
       // r = "交通..";
